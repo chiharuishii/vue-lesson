@@ -47,12 +47,23 @@
     <hr>
     <button @click="incrementCount">Add to count</button>
     <p>{{ count }}回クリックしました</p>
+    <counter :count="count"></counter>
+    <hr>
+    <input type="text" v-model="inputText">
+    <p>computed: {{ getUpperCaseText }}</p>
     <p>methods: {{ showUpperCaseText() }}</p>
+    <hr>
+    <template v-for="category in categories">
+      <p :key="$uuid.v4()">
+        {{ category }}
+      </p>
+    </template>
+    <button @click="updateText">update text</button>
     <hr>
     <form>
       <div>
         <span>名前：</span>
-        <input type="text" v-model="form.name">
+        <input-text v-model="form.name"></input-text>
         <p>名前: {{ getInputName }}</p>
       </div>
       <div>
@@ -95,10 +106,14 @@
 
   <script>
   import ChildComponent from 'Components/ChildComponent';
-  // import Counter from 'Components/Counter';
-  // import InputText from 'Components/InputText';
+  import Counter from 'Components/Counter';
+  import InputText from 'Components/InputText';
 
   export default {
+    beforeCreate() {
+    console.log('beforeCreate');
+    console.log(this.leads); //undefined
+    },
     data() {
       return {
         leads: { 
@@ -210,8 +225,8 @@
     },
     components: {
       ChildComponent,
-      // Counter,
-      // InputText,
+      Counter,
+      InputText,
     }
   }
 </script>
