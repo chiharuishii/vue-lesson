@@ -1,0 +1,228 @@
+<template>
+  <div>
+    <h1 
+      v-html="message"
+      :class="classObject"
+    ></h1>
+    <p>{{ leads.description }}</p>
+    <p>{{ description }}</p>
+    <button @click="changeTextSize">large</button>
+    <button
+      @click="addDescription"
+    >
+      add description
+    </button>
+    <hr>
+    <child-component
+      v-show="isShow"
+    >
+      <template v-slot:head>
+        <p>head slot</p>
+      </template>
+      <template v-slot:default>
+        <p>main slot</p>
+        <p>main slot2</p>
+      </template>
+      <template v-slot:foot>
+        <p>foot slot</p>
+      </template>
+    </child-component>
+    <hr>
+    <p v-if="id === 1">1</p>
+    <template v-else-if="id === 2">
+      <p>2-1</p>
+      <p>2-2</p>
+      <p>2-3</p>
+    </template>
+    <p v-else>other</p>
+    <hr>
+      <template v-for="item in items">
+        <child-component 
+          :key="item.id"
+          :title="item.title"
+        >
+          <span>slot content</span>
+        </child-component>
+      </template>
+    <hr>
+    <button @click="incrementCount">Add to count</button>
+    <p>{{ count }}回クリックしました</p>
+    <p>methods: {{ showUpperCaseText() }}</p>
+    <hr>
+    <form>
+      <div>
+        <span>名前：</span>
+        <input type="text" v-model="form.name">
+        <p>名前: {{ getInputName }}</p>
+      </div>
+      <div>
+        <span>性別:</span>
+        <label>
+          男性
+          <input type="radio" value="male" v-model="form.sex">
+        </label>
+        <label>
+            女性
+          <input type="radio" value="female" v-model="form.sex">
+        </label>
+        <p>性別: {{ getRadioValue }}</p>
+      </div>
+      <div>
+        <select v-model="form.selected">
+          <option disabled value="">--出身地を選択してください--</option>
+          <option v-for="option in form.options"
+            :value="option.value"
+            :key="option.id"
+          >
+              {{ option.value }}
+          </option>
+        </select>
+        <p>出身地:{{ getSelectValue }}</p>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" v-model="form.checked">
+          ２０歳以上です
+        </label>
+        <p>チェックボックス: {{ getCheckBoxValue }}</p>
+      </div>
+    </form>
+    
+    <hr>
+    
+  <script>
+  import ChildComponent from 'Components/ChildComponent';
+  // import Counter from 'Components/Counter';
+  // import InputText from 'Components/InputText';
+
+  export default {
+    data() {
+      return {
+        leads: { 
+          message: '<span>Hello Vue</span>',
+          description: '',
+        },
+        message: '<span>Hello Vue</span>',
+        description:'',
+        isShow: true,
+        id: 2,
+        count:0,
+        inputText:'',
+        classObject:{
+          'is-green':true,
+        },
+        items: [
+          {
+            id: this.$uuid.v4(),
+            title: '１番目のリスト',
+          },
+          {
+            id: this.$uuid.v4(),
+            title: '２番目のリスト',
+          },
+          {
+            id: this.$uuid.v4(),
+            title: '３番目のリスト',
+          }
+        ],
+        form: {
+          name: '',
+          sex:'',
+          selected:'',
+          options: [
+            {
+              id: this.$uuid.v4(),
+              value: '東京都',
+            },
+            {
+              id: this.$uuid.v4(),
+              value: '埼玉県',
+            },
+            {
+              id: this.$uuid.v4(),
+              value: '神奈川県',
+            },
+            {
+              id: this.$uuid.v4(),
+              value: '千葉県',
+            },
+          ],
+          checked :false,
+        },
+        categories: ['Javascript','jQuery'],
+      }
+    },
+    methods:{
+      incrementCount() {
+        this.count++;
+      },
+      showUpperCaseText() {
+        const upperCaseText = this.inputText.toUpperCase();
+        // console.log(`method:${upperCaseText}`);
+        return upperCaseText;
+      },
+      addDescription() {
+        this.leads.description = 'Vue-lesson';
+      },
+      changeTextSize(){
+        this.classObject = {...this.classObject, 'is-large': true};
+      },
+      updateText() { 
+        this.$set(this.categories,1,'Vue.js');
+      }
+    },
+    computed:{
+      getInputName() {
+        return this.form.name;
+      },
+      getRadioValue() {
+        return this.form.sex;
+      },
+      getSelectValue() {
+        return this.form.selected;
+      },
+      getCheckBoxValue() {
+        return this.form.checked;
+      },
+      getUpperCaseText() {
+        const upperCaseText = this.inputText.toUpperCase();
+        // console.log(`computed: ${upperCaseText}`);
+        return upperCaseText;
+      },
+      getInputName() {
+      return this.form.name;
+      }
+    },
+    watch: {
+      inputText(value, oldValue) {
+        console.log(`value -> ${value}`);
+        console.log(`oldValue -> ${oldValue}`);
+      }
+    },
+    leads: {
+        handler() {
+          console.log('add description');
+        },
+        deep: true,
+    },
+    components: {
+      ChildComponent,
+      // Counter,
+      // InputText,
+    }
+  }
+</script>
+
+<style scoped>
+  .is-green {
+    color: green;
+  }
+
+  .is-large{
+    font-size: 48px;
+  }
+
+  hr {
+    margin: 16px 0;
+  }
+</style>
