@@ -89,7 +89,10 @@
     </form>
     
     <hr>
-    
+  </div>
+</template>
+
+
   <script>
   import ChildComponent from 'Components/ChildComponent';
   // import Counter from 'Components/Counter';
